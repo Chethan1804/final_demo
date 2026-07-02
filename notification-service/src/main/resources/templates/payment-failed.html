@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .button { display: inline-block; padding: 10px 20px; background-color: #dc3545; color: #ffffff; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="'Payment Failed, ' + ${username}">Payment Failed</h2>
+    <p th:text="'Unfortunately, your payment for order ' + ${orderId} + ' could not be processed.'">Payment could not be processed.</p>
+    <p th:text="'Reason: ' + ${reason}">Reason</p>
+    <p>Please try again or contact support if the issue persists.</p>
+    <a th:href="@{${appUrl}}" class="button">Try Again</a>
+</div>
+</body>
+</html>

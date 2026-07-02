@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Insights Ready</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid #e0e6ed; padding-bottom: 15px; margin-bottom: 20px; }
+        .header h1 { color: #8e44ad; font-size: 24px; }
+        .content p { line-height: 1.6; font-size: 16px; margin-bottom: 15px; }
+        .insight-box { background-color: #f9f0ff; border-left: 4px solid #8e44ad; padding: 15px; border-radius: 4px; margin-top: 20px;}
+        .footer { text-align: center; font-size: 13px; color: #7f8c8d; margin-top: 30px; border-top: 1px solid #e0e6ed; padding-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Insights Generated</h1>
+        </div>
+        <div class="content">
+            <p>Hi <strong th:text="${username}">User</strong>,</p>
+            <p>Our AI engines have successfully analyzed your latest resume and generated intelligent suggestions to help you stand out to recruiters.</p>
+            <div class="insight-box">
+                <p><strong>AI Suggestion Preview:</strong></p>
+                <p th:text="${suggestionPreview}">Your preview goes here...</p>
+            </div>
+            <p>Log in to view the complete insights and apply them to your profile!</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 Smart Resume Builder. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

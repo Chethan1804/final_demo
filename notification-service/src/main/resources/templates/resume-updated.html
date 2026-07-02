@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Updated</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid #e0e6ed; padding-bottom: 15px; margin-bottom: 20px; }
+        .header h1 { color: #2c3e50; font-size: 24px; }
+        .content p { line-height: 1.6; font-size: 16px; margin-bottom: 15px; }
+        .footer { text-align: center; font-size: 13px; color: #7f8c8d; margin-top: 30px; border-top: 1px solid #e0e6ed; padding-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Resume Update Notification</h1>
+        </div>
+        <div class="content">
+            <p>Hi <strong th:text="${username}">User</strong>,</p>
+            <p>Your resume (Version <strong th:text="${version}">1</strong>) has been successfully generated and saved to your profile!</p>
+            <p>You can download or review it at any time from your dashboard.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 Smart Resume Builder. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
