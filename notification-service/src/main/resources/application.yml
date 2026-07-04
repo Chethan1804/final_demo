@@ -1,0 +1,84 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: notification-service
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+  # MySQL — required for FailedEmail entity
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/notificationdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root123}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: false
+
+  # Brevo SMTP
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: ${BREVO_SMTP_USER:a72e2f001@smtp-brevo.com}
+    password: ${BREVO_SMTP_PASSWORD:your_brevo_smtp_password_here}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  # Thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false  # set true in prod profile below
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+notification:
+  default-sender: ${BREVO_SENDER_EMAIL:chethshivu07@gmail.com}
+  internal:
+    token: ${NOTIFICATION_INTERNAL_TOKEN:secret-internal-token-123}
+  retry:
+    max-attempts: 3
+    backoff-delay: 2000
+
+management:
+  health:
+    mail:
+      enabled: false
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [correlationId=%X{correlationId}] %logger{36} - %msg%n"
+  level:
+    com.notification_service: DEBUG
+
+---
+# Production profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+  thymeleaf:
+    cache: true
+ 

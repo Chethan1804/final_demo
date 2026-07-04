@@ -1,0 +1,123 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:5174"
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        # Auth Service
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/auth/(?<segment>.*), /auth/${segment}
+
+        # User Service - internal email lookup (no auth required - feign only)
+        - id: user-service-email
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/email/**
+
+        # User Service - authenticated user routes
+        - id: user-service-user
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - AuthenticationFilter
+
+        # User Service - admin routes
+        - id: user-service-admin
+          uri: lb://user-service
+          predicates:
+            - Path=/api/admin/users/**
+          filters:
+            - AuthenticationFilter
+
+        # Resume Service - admin resumes by user (internal feign call, no JWT from gateway needed)
+        - id: resume-service-admin-by-user
+          uri: lb://resume-service
+          predicates:
+            - Path=/api/admin/resumes/user/**
+
+        # Resume Service - user routes
+        - id: resume-service-user
+          uri: lb://resume-service
+          predicates:
+            - Path=/api/resumes/**
+          filters:
+            - AuthenticationFilter
+
+        # Resume Service - admin routes
+        - id: resume-service-admin
+          uri: lb://resume-service
+          predicates:
+            - Path=/api/admin/resumes/**
+          filters:
+            - AuthenticationFilter
+
+        # AI Service - premium only (JwtFilter enforces PREMIUM role)
+        - id: ai-service
+          uri: lb://AI-service
+          predicates:
+            - Path=/api/ai/**
+          filters:
+            - AuthenticationFilter
+
+        # Payment Service - webhook (no JWT — Razorpay calls this directly)
+        - id: payment-service-webhook
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/payments/webhook
+
+        # Payment Service - authenticated routes
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - AuthenticationFilter
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+jwt:
+  secret: ${JWT_SECRET:5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [correlationId=%X{correlationId}] %logger{36} - %msg%n"
+  level:
+    com.api_gateway: DEBUG
+    org.springframework.cloud.gateway: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

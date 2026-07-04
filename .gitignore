@@ -1,6 +1,4 @@
 # Secrets - service configs
-**/src/main/resources/application.properties
-**/src/main/resources/application.yml
 .env
 
 # Build folders
